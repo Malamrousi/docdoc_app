@@ -10,4 +10,4 @@ class LoginScreen extends StatelessWidget {
       body: Center(child: Text('LoginScreen')),
     );
   }
-}  
+}
