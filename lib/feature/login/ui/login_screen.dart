@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   verticalSpacing(16),
                   const TermsAndConditionsText(),
                   verticalSpacing(60),
-               const   DontHaveAccountText()
+                  const DontHaveAccountText()
                 ],
               ),
             ),
