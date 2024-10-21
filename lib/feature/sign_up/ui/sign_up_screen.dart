@@ -1,24 +1,24 @@
-import 'package:docdoc/core/helper/spacing.dart';
-import 'package:docdoc/feature/login/logic/login/login_cubit.dart';
-import 'package:docdoc/feature/login/ui/widgets/login_bloc_listener.dart';
-
-import 'package:docdoc/feature/login/ui/widgets/terms_and_conditions_text.dart';
+import 'package:docdoc/feature/sign_up/logic/cubit/sign_up_cubit.dart';
+import 'package:docdoc/feature/sign_up/ui/widgets/sign_up_form.dart';
+import 'package:docdoc/feature/sign_up/ui/widgets/have_account_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/helper/spacing.dart';
 import '../../../core/theming/styles.dart';
 import '../../../core/widget/app_text_button.dart';
-import 'widgets/dont_have_account_text.dart';
-import 'widgets/email_and_password.dart';
+import '../../login/ui/widgets/terms_and_conditions_text.dart';
+import 'widgets/sign_up_bloc_listner.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+        body:  SafeArea(
           child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
         child: SingleChildScrollView(
@@ -36,7 +36,7 @@ class LoginScreen extends StatelessWidget {
             verticalSpacing(36),
             Column(
               children: [
-                const EmailAndPassword(),
+                const SignUpForm(),
                 verticalSpacing(24),
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
@@ -45,26 +45,29 @@ class LoginScreen extends StatelessWidget {
                 ),
                 verticalSpacing(40),
                 AppTextButton(
-                    buttonText: 'Login',
+                    buttonText: 'Create Account',
                     onPressed: () {
-                      validateThanDoLogin(context);
+                      validateThanDoSinUp(context);
                     }),
                 verticalSpacing(16),
                 const TermsAndConditionsText(),
                 verticalSpacing(60),
-                const DontHaveAccountText(),
-                const LoginBlocListener(),
+                const AlreadyHaveAccountText(),
+                const SignUpBlocListener(),
               ],
             ),
           ]),
         ),
       )),
     );
+   
   }
-
-  void validateThanDoLogin(BuildContext context) {
-    if (context.read<LoginCubit>().formKey.currentState!.validate()) {
-      context.read<LoginCubit>().emitLogin();
+  
+  void validateThanDoSinUp(BuildContext context) {
+    if(context.read<SignUpCubit>().formKey.currentState!.validate()) {
+       context.read<SignUpCubit>().emitSignUp();
     }
   }
+
+  
 }
