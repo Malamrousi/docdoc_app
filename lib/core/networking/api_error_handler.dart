@@ -1,7 +1,12 @@
- import 'api_error_model.dart';
+import 'package:dio/dio.dart';
 
+import 'api_constants.dart';
+import 'api_error_model.dart';
+
+
+
+// TODO: wallahy I will refactor this .. Omar Ahmed
 enum DataSource {
-  SUCCESS,
   NO_CONTENT,
   BAD_REQUEST,
   FORBIDDEN,
@@ -14,6 +19,7 @@ enum DataSource {
   SEND_TIMEOUT,
   CACHE_ERROR,
   NO_INTERNET_CONNECTION,
+  // API_LOGIC_ERROR,
   DEFAULT
 }
 
@@ -25,7 +31,7 @@ class ResponseCode {
   static const int FORBIDDEN = 403; //  failure, API rejected request
   static const int INTERNAL_SERVER_ERROR = 500; // failure, crash in server side
   static const int NOT_FOUND = 404; // failure, not found
-  static const int API_LOGIC_ERROR = 422; 
+  static const int API_LOGIC_ERROR = 422; // API , lOGIC ERROR
 
   // local status code
   static const int CONNECT_TIMEOUT = -1;
@@ -62,47 +68,61 @@ class ResponseMessage {
 }
 
 extension DataSourceExtension on DataSource {
-  Failure getFailure() {
-    var mContext = navigatorKey!.currentState!.context;
+  ApiErrorModel getFailure() {
     switch (this) {
-      case DataSource.SUCCESS:
-        return Failure(ResponseCode.SUCCESS, ResponseMessage.SUCCESS.tr(mContext));
       case DataSource.NO_CONTENT:
-        return Failure(ResponseCode.NO_CONTENT, ResponseMessage.NO_CONTENT.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.NO_CONTENT, message: ResponseMessage.NO_CONTENT);
       case DataSource.BAD_REQUEST:
-        return Failure(ResponseCode.BAD_REQUEST, ResponseMessage.BAD_REQUEST.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.BAD_REQUEST,
+            message: ResponseMessage.BAD_REQUEST);
       case DataSource.FORBIDDEN:
-        return Failure(ResponseCode.FORBIDDEN, ResponseMessage.FORBIDDEN.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.FORBIDDEN, message: ResponseMessage.FORBIDDEN);
       case DataSource.UNAUTORISED:
-        return Failure(ResponseCode.UNAUTORISED, ResponseMessage.UNAUTORISED.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.UNAUTORISED,
+            message: ResponseMessage.UNAUTORISED);
       case DataSource.NOT_FOUND:
-        return Failure(ResponseCode.NOT_FOUND, ResponseMessage.NOT_FOUND.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.NOT_FOUND, message: ResponseMessage.NOT_FOUND);
       case DataSource.INTERNAL_SERVER_ERROR:
-        return Failure(ResponseCode.INTERNAL_SERVER_ERROR,
-            ResponseMessage.INTERNAL_SERVER_ERROR.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.INTERNAL_SERVER_ERROR,
+            message: ResponseMessage.INTERNAL_SERVER_ERROR);
       case DataSource.CONNECT_TIMEOUT:
-        return Failure(
-            ResponseCode.CONNECT_TIMEOUT, ResponseMessage.CONNECT_TIMEOUT.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.CONNECT_TIMEOUT,
+            message: ResponseMessage.CONNECT_TIMEOUT);
       case DataSource.CANCEL:
-        return Failure(ResponseCode.CANCEL, ResponseMessage.CANCEL.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.CANCEL, message: ResponseMessage.CANCEL);
       case DataSource.RECIEVE_TIMEOUT:
-        return Failure(
-            ResponseCode.RECIEVE_TIMEOUT, ResponseMessage.RECIEVE_TIMEOUT.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.RECIEVE_TIMEOUT,
+            message: ResponseMessage.RECIEVE_TIMEOUT);
       case DataSource.SEND_TIMEOUT:
-        return Failure(ResponseCode.SEND_TIMEOUT, ResponseMessage.SEND_TIMEOUT.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.SEND_TIMEOUT,
+            message: ResponseMessage.SEND_TIMEOUT);
       case DataSource.CACHE_ERROR:
-        return Failure(ResponseCode.CACHE_ERROR, ResponseMessage.CACHE_ERROR.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.CACHE_ERROR,
+            message: ResponseMessage.CACHE_ERROR);
       case DataSource.NO_INTERNET_CONNECTION:
-        return Failure(ResponseCode.NO_INTERNET_CONNECTION,
-            ResponseMessage.NO_INTERNET_CONNECTION.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.NO_INTERNET_CONNECTION,
+            message: ResponseMessage.NO_INTERNET_CONNECTION);
       case DataSource.DEFAULT:
-        return Failure(ResponseCode.DEFAULT, ResponseMessage.DEFAULT.tr(mContext));
+        return ApiErrorModel(
+            code: ResponseCode.DEFAULT, message: ResponseMessage.DEFAULT);
     }
   }
 }
 
 class ErrorHandler implements Exception {
-  late ErrorModel apiErrorModel;
+  late ApiErrorModel apiErrorModel;
 
   ErrorHandler.handle(dynamic error) {
     if (error is DioException) {

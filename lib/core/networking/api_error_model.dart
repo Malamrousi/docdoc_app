@@ -33,6 +33,5 @@ final int? code;
   /// factory.
   factory ApiErrorModel.fromJson(Map<String, dynamic> json) => _$ApiErrorModelFromJson(json);
 
-  /// Connect the generated [_$PersonToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$ApiErrorModelToJson(this);
 }
